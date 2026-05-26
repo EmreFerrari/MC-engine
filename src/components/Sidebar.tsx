@@ -22,6 +22,7 @@ export function Sidebar({ currentView, setCurrentView }: SidebarProps) {
 
   const adminItems = [
     { id: 'audits', label: 'Override Audits', icon: Fingerprint },
+    { id: 'telemetry', label: 'Model Telemetry', icon: ActivitySquare },
     { id: 'settings', label: 'Engine Settings', icon: Settings },
   ];
 

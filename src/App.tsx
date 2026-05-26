@@ -14,6 +14,7 @@ import { AdjudicationQueue } from '@/views/AdjudicationQueue';
 import { ScenarioLibrary } from '@/views/ScenarioLibrary';
 import { OverrideAudits } from '@/views/OverrideAudits';
 import { Settings } from '@/views/Settings';
+import { ModelTelemetry } from '@/views/ModelTelemetry';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -32,6 +33,7 @@ export default function App() {
           {currentView === 'network' && <DependencyGraph />}
           {currentView === 'adjudication' && <AdjudicationQueue />}
           {currentView === 'audits' && <OverrideAudits />}
+          {currentView === 'telemetry' && <ModelTelemetry />}
           {currentView === 'settings' && <Settings />}
         </main>
       </div>

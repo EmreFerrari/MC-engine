@@ -14,6 +14,8 @@ const trendData = [
 export function Dashboard({ setCurrentView }: DashboardProps) {
   const [showStressSuite, setShowStressSuite] = useState(false);
 
+  const [dialect, setDialect] = useState<'financial' | 'operational'>('financial');
+
   return (
     <div className="max-w-[1400px] mx-auto pb-12">
       {/* Header Section */}
@@ -79,8 +81,18 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
                 </h2>
               </div>
               <div className="flex bg-slate-900 border border-slate-700/50 rounded overflow-hidden">
-                <button className="px-3 py-1 text-[10px] font-mono font-medium tracking-widest bg-slate-800 text-slate-200">Financial Dialect</button>
-                <button className="px-3 py-1 text-[10px] font-mono font-medium tracking-widest text-slate-500 hover:text-slate-300">Operational Dialect</button>
+                <button 
+                  onClick={() => setDialect('financial')}
+                  className={cn("px-3 py-1 text-[10px] font-mono font-medium tracking-widest", dialect === 'financial' ? "bg-slate-800 text-slate-200" : "text-slate-500 hover:text-slate-300")}
+                >
+                  Financial Dialect
+                </button>
+                <button 
+                  onClick={() => setDialect('operational')}
+                  className={cn("px-3 py-1 text-[10px] font-mono font-medium tracking-widest", dialect === 'operational' ? "bg-slate-800 text-slate-200" : "text-slate-500 hover:text-slate-300")}
+                >
+                  Operational Dialect
+                </button>
               </div>
             </div>
             
@@ -88,14 +100,16 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
               <ScenarioCard 
                 badge="Baseline"
                 title="Peacetime Steady-State"
-                cost="$12M RaR"
+                cost={dialect === 'financial' ? "$12M RaR" : "Nominal"}
+                costLabel={dialect === 'financial' ? "Expected Loss" : "Stockpile Depletion"}
                 delivery="14 days"
                 isBase
               />
               <ScenarioCard 
                 badge="Stressed"
                 title="Taiwan Strait Blockade"
-                cost="$340M RaR"
+                cost={dialect === 'financial' ? "$340M RaR" : "-42% JASSM"}
+                costLabel={dialect === 'financial' ? "Expected Loss" : "Stockpile Depletion"}
                 delivery="45 days"
                 delta="-31 days"
                 isAlert
@@ -103,7 +117,8 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
               <ScenarioCard 
                 badge="Mitigated"
                 title="Blockade + Sec. Supplier"
-                cost="$85M RaR"
+                cost={dialect === 'financial' ? "$85M RaR" : "-15% JASSM"}
+                costLabel={dialect === 'financial' ? "Expected Loss" : "Stockpile Depletion"}
                 delivery="22 days"
                 delta="+23 days from Stressed"
                 isPositive
@@ -215,10 +230,23 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
           {/* SUMMARY CRITICAL PATH */}
           <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
             <h2 className="text-[13px] font-bold uppercase tracking-widest text-slate-200 border-b border-slate-800 pb-3 mb-4">Most Fragile Path (KCCS Weighted)</h2>
-            <div className="flex flex-col gap-2 flex-1 bg-slate-900/40 p-3 rounded border border-slate-800 relative">
-              <NodeCard name="Supplier Node Delta" status="Degraded" role="Sub-tier Sole Source" />
-              <div className="flex justify-center -my-2.5 z-10"><ArrowRight className="w-4 h-4 text-slate-600 rotate-90" /></div>
-              <NodeCard name="Transit Hub Alpha" status="Red" role="Transit Hub" isAlert />
+            <div className="flex flex-col gap-2 flex-1 bg-slate-900/40 p-3 rounded border border-slate-800 relative justify-center">
+              
+              <div className="flex gap-2">
+                <NodeCard name="Supplier Node Delta" status="Degraded" role="Sub-tier Source" />
+                <NodeCard name="Supplier Node Echo" status="Offline" role="Spec. Component" isAlert />
+              </div>
+              
+              <div className="flex justify-center -my-3 z-10 relative h-6">
+                {/* Branching arrows */}
+                <div className="absolute top-1/2 left-1/4 w-1/4 h-px border-t-2 border-slate-700 rounded-tl-lg" />
+                <div className="absolute top-1/2 right-1/4 w-1/4 h-px border-t-2 border-slate-700 rounded-tr-lg" />
+                <div className="absolute top-1/2 left-1/2 w-px h-1/2 bg-slate-700" />
+                <ArrowRight className="w-4 h-4 text-slate-600 rotate-90 absolute -bottom-1 left-1/2 -translate-x-1/2" />
+              </div>
+              
+              <NodeCard name="Transit Hub Alpha" status="Red" role="Chokepoint" isAlert />
+              
               <div className="flex justify-center -my-2.5 z-10"><ArrowRight className="w-4 h-4 text-slate-600 rotate-90" /></div>
               <NodeCard name="Port of Entry Bravo" status="At-Risk" role="Port of Entry" />
             </div>
@@ -292,7 +320,7 @@ function NodeCard({ name, status, role, isAlert }: { name: string, status: strin
   );
 }
 
-function ScenarioCard({ badge, title, cost, delivery, delta, isBase, isPositive, isAlert }: any) {
+function ScenarioCard({ badge, title, cost, costLabel = "Expected Loss", delivery, delta, isBase, isPositive, isAlert }: any) {
   return (
     <div className={cn("border rounded p-4 bg-[#050810] relative overflow-hidden h-full flex flex-col", isBase ? "border-blue-500/30" : isAlert ? "border-red-500/30" : isPositive ? "border-emerald-500/30" : "border-slate-800")}>
       {isBase && <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />}
@@ -304,8 +332,8 @@ function ScenarioCard({ badge, title, cost, delivery, delta, isBase, isPositive,
       
       <div className="space-y-4 mt-auto">
         <div>
-          <div className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mb-0.5 font-bold">Expected Loss</div>
-          <div className={cn("font-mono text-lg font-bold", isAlert ? "text-red-400" : "text-amber-500")}>{cost}</div>
+          <div className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mb-0.5 font-bold">{costLabel}</div>
+          <div className={cn("font-mono text-lg font-bold", isAlert ? "text-red-400" : isPositive ? "text-emerald-400" : "text-amber-500")}>{cost}</div>
         </div>
         <div className="pt-3 border-t border-slate-800/60">
           <div className="text-[9px] text-slate-500 uppercase tracking-widest font-mono mb-0.5 font-bold">P90 Delivery</div>

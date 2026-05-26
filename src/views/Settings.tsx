@@ -35,6 +35,48 @@ export function Settings() {
           status="14 Adjudicators"
         />
       </div>
+
+      <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 mt-6">
+        <h3 className="font-bold text-[13px] uppercase tracking-widest flex items-center gap-2 text-slate-200 border-b border-slate-800 pb-3 mb-4">
+          <SettingsIcon className="w-4 h-4 text-slate-400" />
+          Escalation Triggers & Automation
+        </h3>
+        <p className="text-xs text-slate-400 mb-6 max-w-2xl">
+          Configure rule-based engines that automatically spawn L4 simulations and ping L7 human adjudicators when L1 ingestion detects baseline drift on critical path nodes.
+        </p>
+
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-[#050810] border border-slate-700/50 rounded hover:border-slate-600 transition-colors">
+            <div>
+              <div className="font-semibold text-slate-200 mb-1">Auto-Queue Sim on "At-Risk" Node Degradation</div>
+              <div className="text-[11px] text-slate-400 font-sans">Trigger adversarial scenario when any critical path capability drops &gt; 15%</div>
+            </div>
+            <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-blue-600 cursor-pointer">
+              <span className="inline-block h-3 w-3 translate-x-5 rounded-full bg-white transition" />
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between p-4 bg-[#050810] border border-slate-700/50 rounded hover:border-slate-600 transition-colors">
+            <div>
+              <div className="font-semibold text-slate-200 mb-1">Enforce Analyst Reputation Scaling</div>
+              <div className="text-[11px] text-slate-400 font-sans">Weight HUMINT overrides inversely proportional to historical Analyst ACC Score</div>
+            </div>
+            <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-blue-600 cursor-pointer">
+              <span className="inline-block h-3 w-3 translate-x-5 rounded-full bg-white transition" />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between p-4 bg-[#050810] border border-slate-700/50 rounded hover:border-slate-600 transition-colors">
+            <div>
+              <div className="font-semibold text-slate-200 mb-1">Strict POM Cycle Adherence (L5 Political Economy)</div>
+              <div className="text-[11px] text-slate-400 font-sans">Reject any mitigation flagged 'Optimal' if requiring out-of-cycle supplemental &gt;$10M</div>
+            </div>
+            <div className="relative inline-flex h-5 w-9 items-center rounded-full bg-slate-700 cursor-pointer">
+              <span className="inline-block h-3 w-3 translate-x-1 rounded-full bg-white transition" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

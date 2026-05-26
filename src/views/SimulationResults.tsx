@@ -147,6 +147,28 @@ export function SimulationResults() {
         <MetricCard title="P99 Delivery" days={24} color="text-red-400" border="border-red-500/30 bg-[#120606]" opsImpact="Pacific air tasking order degrades 40%. Full operational collapse." />
       </div>
 
+      {/* Actuarial P(W)L Table (L4) */}
+      <div className="bg-[#120D17] border border-purple-500/30 rounded-lg p-5 flex flex-col md:flex-row justify-between items-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-[#0B0F19] to-[#0B0F19]">
+        <div>
+          <h3 className="font-bold text-[13px] uppercase tracking-widest flex items-center gap-2 text-slate-200"><DatabaseZap className="w-4 h-4 text-purple-400" /> Actuarial P(W)L Exposure Table</h3>
+          <p className="text-[10px] font-mono text-purple-400/60 uppercase tracking-widest mt-1 mb-0">PROBABILITY WEIGHTED LOSS TRANSLATION (L4)</p>
+        </div>
+        <div className="flex gap-4 mt-4 md:mt-0">
+          <div className="bg-slate-900/80 border border-slate-700 rounded px-4 py-2 flex flex-col items-center">
+            <span className="text-[9px] font-mono tracking-widest uppercase text-slate-500 mb-1">P50 Expected Loss</span>
+            <span className="font-mono font-bold text-emerald-400 text-lg">$45M</span>
+          </div>
+          <div className="bg-amber-500/5 border border-amber-500/20 rounded px-4 py-2 flex flex-col items-center">
+            <span className="text-[9px] font-mono tracking-widest uppercase text-amber-500/70 mb-1 font-bold">P90 Value@Risk</span>
+            <span className="font-mono font-bold text-amber-500 text-lg">$180M</span>
+          </div>
+          <div className="bg-red-500/5 border border-red-500/20 rounded px-4 py-2 flex flex-col items-center shadow-[0_0_15px_rgba(239,68,68,0.05)]">
+            <span className="text-[9px] font-mono tracking-widest uppercase text-red-500/70 mb-1 font-bold">P99 Tail Risk</span>
+            <span className="font-mono font-bold text-red-400 text-lg">$400M</span>
+          </div>
+        </div>
+      </div>
+
       {/* Chart Section (L1 Adversarial Screening + L2 Wartime Scenario) */}
       <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 relative overflow-hidden">
         <div className="flex justify-between items-center mb-5 relative z-10 border-b border-slate-800 pb-3">
@@ -357,11 +379,36 @@ export function SimulationResults() {
                 <div className="flex justify-between items-start mb-2 pr-20">
                   <h4 className="font-bold text-[13px] text-slate-300">Qualify sec. supplier for Node Delta</h4>
                 </div>
-                <div className="bg-slate-900/50 p-2.5 rounded-sm text-xs border-l-2 border-l-red-500 border border-slate-800/50 mb-3 space-y-1.5 shadow-inner">
-                  <div className="text-red-400 uppercase tracking-widest font-bold text-[9px] font-mono flex items-center gap-1">
-                    Political Economy Constraint (L5)
+                <div className="bg-slate-900/50 p-2.5 rounded-sm text-xs border-l-2 border-l-red-500 border border-slate-800/50 mb-3 shadow-inner group cursor-pointer hover:bg-slate-900 transition-colors">
+                  <div className="flex justify-between items-center mb-1.5">
+                    <div className="text-red-400 uppercase tracking-widest font-bold text-[9px] font-mono flex items-center gap-1">
+                      Political Economy Constraint (L5)
+                    </div>
+                    <span className="text-[9px] text-slate-500 font-mono tracking-widest group-hover:text-blue-400">EXPAND DETAIL</span>
                   </div>
                   <div className="text-slate-400 text-[11px] leading-snug">Incumbent has protection in [Senator X's state]. SASC support likelihood: <span className="text-red-400 font-bold">LOW</span>. Not executable in &lt; 18 mos without emergency POM.</div>
+                  
+                  {/* Expanded Detail (Simulated on Hover/Click for now by group-hover) */}
+                  <div className="mt-4 pt-3 border-t border-slate-700/50 hidden group-hover:block space-y-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-[9px] text-slate-500 font-mono tracking-widest uppercase mb-1">Senator Mapping</div>
+                        <div className="text-xs font-mono text-slate-300">Sen. J. Smith (R-AZ)</div>
+                        <div className="text-[10px] text-red-400 mt-0.5">Key Committee: SASC Chair</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] text-slate-500 font-mono tracking-widest uppercase mb-1">POM Cycle Alignment</div>
+                        <div className="text-xs font-mono text-slate-300">FY27 Cycle Closed</div>
+                        <div className="text-[10px] text-amber-500 mt-0.5">Requires Out-of-Cycle Supp.</div>
+                      </div>
+                    </div>
+                    <div className="bg-red-500/5 p-2 border border-red-500/20 rounded">
+                      <div className="text-[9px] text-slate-500 font-mono tracking-widest uppercase mb-1">SASC Probable Reaction</div>
+                      <div className="text-[11px] font-sans text-slate-300 leading-tight">
+                        Vendor X employs 2,400 in district. SASC highly likely to block dual-sourcing unless framed as 'co-production' under DPA Title III.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
