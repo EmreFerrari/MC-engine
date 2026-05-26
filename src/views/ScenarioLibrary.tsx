@@ -3,10 +3,10 @@ import { FileBox, Zap, Play, Search, AlertOctagon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const scenarios = [
-  { id: 'SCEN-842', name: 'Taiwan Strait Blockade (Adversarial)', desc: 'Full maritime denial with simultaneous localized cyber disruption of primary logistics nodes.', time: '14 Days to P90 Failure', type: 'WARTIME MOBILIZATION (10X)', runCount: 142, active: true },
-  { id: 'SCEN-119', name: 'Red Sea Chokepoint Closure', desc: 'Sustained kinetic denial of Bab el-Mandeb strait forcing routing via Cape of Good Hope.', time: '22 Days to P90 Failure', type: 'KINETIC DENIAL', runCount: 84, active: false },
-  { id: 'SCEN-551', name: 'Rare Earth Export Embargo (PRC)', desc: 'Legal and physical embargo on critical minerals required for Tier 2 and Tier 3 defense manufacturing.', time: '45 Days to P90 Failure', type: 'ECONOMIC WARFARE', runCount: 201, active: false },
-  { id: 'SCEN-002', name: 'Peacetime Baseline (Current Real)', desc: 'Standard operating conditions factoring in current port congestion and ambient cyber noise.', time: 'N/A', type: 'BASELINE', runCount: 890, active: false },
+  { id: 'SCEN-842', name: 'Taiwan Strait Blockade (Adversarial)', desc: 'Full maritime denial with simultaneous localized cyber disruption of primary logistics nodes.', time: '14 Days to P90 Failure', type: 'WARTIME MOBILIZATION (10X)', runCount: 842, acc: '95.2%', validated: '2026-05-15 (J.Doe)', active: true },
+  { id: 'SCEN-119', name: 'Red Sea Chokepoint Closure', desc: 'Sustained kinetic denial of Bab el-Mandeb strait forcing routing via Cape of Good Hope.', time: '22 Days to P90 Failure', type: 'KINETIC DENIAL', runCount: 84, acc: '88.1%', validated: '2026-04-10 (M.Smith)', active: false },
+  { id: 'SCEN-551', name: 'Rare Earth Export Embargo (PRC)', desc: 'Legal and physical embargo on critical minerals required for Tier 2 and Tier 3 defense manufacturing.', time: '45 Days to P90 Failure', type: 'ECONOMIC WARFARE', runCount: 201, acc: '92.4%', validated: '2026-03-22 (Red-Cell 4)', active: false },
+  { id: 'SCEN-002', name: 'Peacetime Baseline (Current Real)', desc: 'Standard operating conditions factoring in current port congestion and ambient cyber noise.', time: 'N/A', type: 'BASELINE', runCount: 890, acc: '98.9%', validated: '2026-05-20 (Auto)', active: false },
 ];
 
 export function ScenarioLibrary() {
@@ -61,21 +61,23 @@ export function ScenarioLibrary() {
             </div>
             
             <div className="mt-6 pt-4 border-t border-slate-800/60 flex justify-between items-center">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <div className="flex flex-col">
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">Historical Runs</span>
-                  <span className="text-sm font-mono text-slate-300 font-bold">{scenario.runCount}</span>
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">History</span>
+                  <span className="text-sm font-mono text-slate-300 font-bold">{scenario.runCount} Runs</span>
                 </div>
-                {scenario.time !== 'N/A' && (
-                  <div className="flex flex-col border-l border-slate-800 pl-4">
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">Median TTL</span>
-                    <span className="text-sm font-mono text-amber-500 font-bold flex items-center gap-1"><AlertOctagon className="w-3 h-3"/> {scenario.time}</span>
-                  </div>
-                )}
+                <div className="flex flex-col border-l border-slate-800 pl-4">
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">Accuracy</span>
+                  <span className="text-sm font-mono text-emerald-400 font-bold">{scenario.acc}</span>
+                </div>
+                <div className="flex flex-col border-l border-slate-800 pl-4">
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">Validated</span>
+                  <span className="text-[11px] mt-0.5 font-mono text-slate-400">{scenario.validated}</span>
+                </div>
               </div>
               
               <button className={cn(
-                "px-5 py-2 rounded text-xs font-bold uppercase tracking-widest font-mono flex items-center gap-2 transition-all",
+                "px-5 py-2 rounded text-xs font-bold uppercase tracking-widest font-mono flex items-center gap-2 transition-all shrink-0 ml-4",
                 scenario.active ? "bg-red-600 text-white hover:bg-red-500" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
               )}>
                 {scenario.active ? <><Zap className="w-3.5 h-3.5 fill-current" /> Active</> : <><Play className="w-3.5 h-3.5" /> Launch</>}

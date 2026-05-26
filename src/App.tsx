@@ -15,6 +15,8 @@ import { ScenarioLibrary } from '@/views/ScenarioLibrary';
 import { OverrideAudits } from '@/views/OverrideAudits';
 import { Settings } from '@/views/Settings';
 import { ModelTelemetry } from '@/views/ModelTelemetry';
+import { SovereignIntel } from '@/views/SovereignIntel';
+import { AnalystReputation } from '@/views/AnalystReputation';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('dashboard');
@@ -31,8 +33,10 @@ export default function App() {
           {currentView === 'scenarios' && <ScenarioLibrary />}
           {currentView === 'threat_intel' && <ThreatIntelFusion />}
           {currentView === 'network' && <DependencyGraph />}
+          {currentView === 'sovereign' && <SovereignIntel />}
           {currentView === 'adjudication' && <AdjudicationQueue />}
           {currentView === 'audits' && <OverrideAudits />}
+          {currentView === 'reputation' && <AnalystReputation />}
           {currentView === 'telemetry' && <ModelTelemetry />}
           {currentView === 'settings' && <Settings />}
         </main>

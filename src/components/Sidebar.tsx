@@ -1,4 +1,4 @@
-import { LayoutDashboard, Plus, Settings, FileBox, Database, Globe, Network, ActivitySquare, Fingerprint } from 'lucide-react';
+import { LayoutDashboard, Plus, Settings, FileBox, Database, Globe, Network, ActivitySquare, Fingerprint, Users, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -17,11 +17,13 @@ export function Sidebar({ currentView, setCurrentView }: SidebarProps) {
   const dataItems = [
     { id: 'network', label: 'Dependency Graph', icon: Network },
     { id: 'threat_intel', label: 'Threat Intel Fusion', icon: Globe },
+    { id: 'sovereign', label: 'Sovereign Intel', icon: Users },
     { id: 'adjudication', label: 'Adjudication Queue', icon: ActivitySquare },
   ];
 
   const adminItems = [
     { id: 'audits', label: 'Override Audits', icon: Fingerprint },
+    { id: 'reputation', label: 'Analyst Reputation', icon: Target },
     { id: 'telemetry', label: 'Model Telemetry', icon: ActivitySquare },
     { id: 'settings', label: 'Engine Settings', icon: Settings },
   ];

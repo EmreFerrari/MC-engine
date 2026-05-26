@@ -194,6 +194,13 @@ export function SimulationResults() {
           </div>
         </div>
 
+        {wartime && (
+          <div className="mb-4 bg-red-950/20 border border-red-500/20 rounded p-3 text-red-400 font-mono text-xs flex items-center justify-between shadow-[0_0_15px_rgba(239,68,68,0.05)]">
+            <span className="font-bold flex items-center gap-2"><Clock className="w-4 h-4" /> Consumption Rate Modeling (JASSM-ER)</span>
+            <span className="tracking-widest">180D PEACETIME <ArrowRight className="w-3 h-3 inline mx-1" /> 60D MANAGED CRISIS <ArrowRight className="w-3 h-3 inline mx-1" /> <span className="font-bold text-red-500">21D FULL MOBILIZATION</span></span>
+          </div>
+        )}
+
         <div className="text-[10px] font-bold text-slate-400 mb-5 flex flex-wrap gap-5 font-mono border-b border-slate-800/40 pb-3 relative z-10 tracking-widest uppercase">
           <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 bg-blue-500 rounded-sm"></div> Reported Data</div>
           <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 bg-purple-500/80 rounded-sm shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div> Adversarial Inject (15% Noise)</div>
