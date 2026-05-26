@@ -38,6 +38,7 @@ export function SimulationResults() {
   const [wartime, setWartime] = useState(false);
   const [showAssumptions, setShowAssumptions] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [expandPolEcon, setExpandPolEcon] = useState(false);
 
   return (
     <div className="max-w-[1400px] mx-auto space-y-6 pb-12">
@@ -379,17 +380,21 @@ export function SimulationResults() {
                 <div className="flex justify-between items-start mb-2 pr-20">
                   <h4 className="font-bold text-[13px] text-slate-300">Qualify sec. supplier for Node Delta</h4>
                 </div>
-                <div className="bg-slate-900/50 p-2.5 rounded-sm text-xs border-l-2 border-l-red-500 border border-slate-800/50 mb-3 shadow-inner group cursor-pointer hover:bg-slate-900 transition-colors">
+                <div 
+                  className="bg-slate-900/50 p-2.5 rounded-sm text-xs border-l-2 border-l-red-500 border border-slate-800/50 mb-3 shadow-inner cursor-pointer hover:bg-slate-900 transition-colors"
+                  onClick={() => setExpandPolEcon(!expandPolEcon)}
+                >
                   <div className="flex justify-between items-center mb-1.5">
                     <div className="text-red-400 uppercase tracking-widest font-bold text-[9px] font-mono flex items-center gap-1">
                       Political Economy Constraint (L5)
                     </div>
-                    <span className="text-[9px] text-slate-500 font-mono tracking-widest group-hover:text-blue-400">EXPAND DETAIL</span>
+                    <span className="text-[9px] text-slate-500 font-mono tracking-widest hover:text-blue-400">{expandPolEcon ? 'COLLAPSE DETAIL' : 'EXPAND DETAIL'}</span>
                   </div>
                   <div className="text-slate-400 text-[11px] leading-snug">Incumbent has protection in [Senator X's state]. SASC support likelihood: <span className="text-red-400 font-bold">LOW</span>. Not executable in &lt; 18 mos without emergency POM.</div>
                   
-                  {/* Expanded Detail (Simulated on Hover/Click for now by group-hover) */}
-                  <div className="mt-4 pt-3 border-t border-slate-700/50 hidden group-hover:block space-y-3">
+                  {/* Expanded Detail (Click to expand) */}
+                  {expandPolEcon && (
+                  <div className="mt-4 pt-3 border-t border-slate-700/50 space-y-3">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <div className="text-[9px] text-slate-500 font-mono tracking-widest uppercase mb-1">Senator Mapping</div>
@@ -409,6 +414,7 @@ export function SimulationResults() {
                       </div>
                     </div>
                   </div>
+                  )}
                 </div>
               </div>
 

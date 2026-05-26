@@ -230,25 +230,39 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
           {/* SUMMARY CRITICAL PATH */}
           <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 flex flex-col flex-1">
             <h2 className="text-[13px] font-bold uppercase tracking-widest text-slate-200 border-b border-slate-800 pb-3 mb-4">Most Fragile Path (KCCS Weighted)</h2>
-            <div className="flex flex-col gap-2 flex-1 bg-slate-900/40 p-3 rounded border border-slate-800 relative justify-center">
+            <div className="flex flex-col flex-1 bg-[#050810] p-4 rounded border border-slate-800 relative justify-center items-center">
               
-              <div className="flex gap-2">
-                <NodeCard name="Supplier Node Delta" status="Degraded" role="Sub-tier Source" />
-                <NodeCard name="Supplier Node Echo" status="Offline" role="Spec. Component" isAlert />
+              <div className="flex gap-6 w-full justify-center relative z-10">
+                <div className="flex-1 max-w-[180px]">
+                  <NodeCard name="Supplier Node Delta" status="Degraded" role="Sub-tier Source" />
+                </div>
+                <div className="flex-1 max-w-[180px]">
+                  <NodeCard name="Supplier Node Echo" status="Offline" role="Spec. Component" isAlert />
+                </div>
               </div>
               
-              <div className="flex justify-center -my-3 z-10 relative h-6">
-                {/* Branching arrows */}
-                <div className="absolute top-1/2 left-1/4 w-1/4 h-px border-t-2 border-slate-700 rounded-tl-lg" />
-                <div className="absolute top-1/2 right-1/4 w-1/4 h-px border-t-2 border-slate-700 rounded-tr-lg" />
-                <div className="absolute top-1/2 left-1/2 w-px h-1/2 bg-slate-700" />
-                <ArrowRight className="w-4 h-4 text-slate-600 rotate-90 absolute -bottom-1 left-1/2 -translate-x-1/2" />
+              {/* Branching SVGs spanning from Nodes to Hub */}
+              <div className="w-full flex justify-center -my-1 h-10 relative z-0">
+                 <svg className="w-full h-full absolute inset-0 text-slate-700" preserveAspectRatio="none" stroke="currentColor" fill="none" viewBox="0 0 100 100">
+                    <path d="M25,0 C25,50 50,50 50,100" strokeWidth="2" strokeDasharray="4 2" />
+                    <path d="M75,0 C75,50 50,50 50,100" strokeWidth="2" strokeDasharray="4 2" />
+                 </svg>
+                 <ArrowRight className="w-3.5 h-3.5 text-slate-500 rotate-90 absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#050810]" />
               </div>
               
-              <NodeCard name="Transit Hub Alpha" status="Red" role="Chokepoint" isAlert />
+              <div className="w-full max-w-[240px] z-10">
+                <NodeCard name="Transit Hub Alpha" status="Red" role="Chokepoint" isAlert />
+              </div>
               
-              <div className="flex justify-center -my-2.5 z-10"><ArrowRight className="w-4 h-4 text-slate-600 rotate-90" /></div>
-              <NodeCard name="Port of Entry Bravo" status="At-Risk" role="Port of Entry" />
+              <div className="w-full flex justify-center h-8 relative z-0 -my-1">
+                 <div className="w-px h-full" style={{ background: 'repeating-linear-gradient(to bottom, transparent, transparent 4px, #334155 4px, #334155 8px)' }} />
+                 <ArrowRight className="w-3.5 h-3.5 text-slate-500 rotate-90 absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#050810]" />
+              </div>
+
+              <div className="w-full max-w-[240px] z-10 mt-2">
+                <NodeCard name="Port of Entry Bravo" status="At-Risk" role="Port of Entry" />
+              </div>
+              
             </div>
           </div>
 
