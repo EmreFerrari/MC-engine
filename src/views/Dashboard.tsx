@@ -133,6 +133,7 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
                   title="Supplier Node Delta Capacity Drop"
                   analyst="Auto-generated"
                   desc="Adversarial screening flagged 15% noise in latest report."
+                  isAutoQueued
                 />
               </div>
             </div>
@@ -147,9 +148,9 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
                 <button className="text-blue-500 text-[10px] uppercase font-mono tracking-widest hover:underline">View All</button>
               </div>
               <div className="space-y-1">
-                <JournalRow hash="#SCEN-842" title="Taiwan Strait Blockade" date="22 May 22:18" status="COMPLETED" analyst="J.Doe" overrides="1" onClick={() => setCurrentView('simulation_results')} />
-                <JournalRow hash="#SCEN-841" title="Kinetic Strike: Hub Alpha" date="21 May 14:05" status="COMPLETED" analyst="M.Smith" overrides="0" />
-                <JournalRow hash="#SCEN-840" title="Rare Earth Embargo" date="19 May 09:12" status="REJECTED" analyst="J.Doe" overrides="3" />
+                <JournalRow hash="#SCEN-842" title="Taiwan Strait Blockade" date="22 May 22:18" status="COMPLETED" analyst="J.Doe" acc="11/12" weight="HIGH" overrides="1" onClick={() => setCurrentView('simulation_results')} />
+                <JournalRow hash="#SCEN-841" title="Kinetic Strike: Hub Alpha" date="21 May 14:05" status="COMPLETED" analyst="M.Smith" acc="4/5" weight="MED" overrides="0" />
+                <JournalRow hash="#SCEN-840" title="Rare Earth Embargo" date="19 May 09:12" status="REJECTED" analyst="J.Doe" acc="11/12" weight="HIGH" overrides="3" />
               </div>
             </div>
 
@@ -230,7 +231,7 @@ export function Dashboard({ setCurrentView }: DashboardProps) {
   );
 }
 
-function JournalRow({hash, title, date, status, analyst, overrides, onClick}: any) {
+function JournalRow({hash, title, date, status, analyst, acc, weight, overrides, onClick}: any) {
   return (
     <div onClick={onClick} className={cn("flex items-center justify-between py-2 border-b border-slate-800/50 hover:bg-slate-900/50 px-2 -mx-2 rounded transition-colors cursor-pointer", onClick && "group")}>
       <div>
@@ -240,11 +241,13 @@ function JournalRow({hash, title, date, status, analyst, overrides, onClick}: an
         </div>
         <div className={cn("text-xs font-semibold text-slate-300", onClick && "group-hover:text-blue-400 transition-colors")}>{title}</div>
       </div>
-      <div className="text-right">
+      <div className="text-right flex flex-col items-end">
         <div className="font-mono text-[10px] text-slate-500">{date}</div>
-        <div className="font-mono text-[9px] text-slate-400 mt-1 uppercase tracking-widest flex items-center justify-end gap-1.5">
-          {analyst} 
-          <span className="bg-slate-800 px-1 py-0.5 rounded border border-slate-700">{overrides} OVR</span>
+        <div className="font-mono text-[9px] text-slate-400 mt-1 uppercase tracking-widest flex items-center justify-end gap-1.5 flex-wrap">
+          <span className="text-slate-300 font-bold">{analyst}</span> 
+          {acc && <span className="text-emerald-400 bg-emerald-500/10 px-1 rounded border border-emerald-500/20">{acc} ACC</span>}
+          {weight && <span className={cn("px-1 py-0.5 rounded font-bold border leading-none pt-0.5 mb-[-2px]", weight === 'HIGH' ? "text-blue-400 bg-blue-500/10 border-blue-500/20" : "text-amber-500 bg-amber-500/10 border-amber-500/20")}>{weight} WEIGHT</span>}
+          <span className="bg-slate-800 px-1 py-0.5 rounded border border-slate-700 ml-1">{overrides} OVR</span>
         </div>
       </div>
     </div>
@@ -260,10 +263,13 @@ function ScoreComponent({ label, score, color, border }: { label: string, score:
   );
 }
 
-function QueueItem({ title, analyst, desc, onClick }: { title: string, analyst: string, desc: string, onClick?: () => void }) {
+function QueueItem({ title, analyst, desc, isAutoQueued, onClick }: { title: string, analyst: string, desc: string, isAutoQueued?: boolean, onClick?: () => void }) {
   return (
     <div onClick={onClick} className={cn("bg-[#050810] border border-slate-800 p-3 rounded flex flex-col gap-1.5", onClick && "cursor-pointer hover:border-blue-500/50 hover:bg-slate-900/50 transition-colors group")}>
-      <h4 className={cn("font-semibold text-xs", onClick && "group-hover:text-blue-400 transition-colors")}>{title}</h4>
+      <div className="flex justify-between items-start">
+        <h4 className={cn("font-semibold text-xs", onClick && "group-hover:text-blue-400 transition-colors")}>{title}</h4>
+        {isAutoQueued && <span className="bg-purple-500/10 text-purple-400 border border-purple-500/30 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-widest shrink-0 ml-2">Auto-Queued</span>}
+      </div>
       <p className="text-[11px] text-slate-400 leading-tight">{desc}</p>
       <div className="text-[9px] text-amber-500/80 flex items-center gap-1 font-mono uppercase tracking-widest mt-1 font-bold">
         <CheckCircle2 className="w-3 h-3 text-amber-500" /> Adj. Required: {analyst}

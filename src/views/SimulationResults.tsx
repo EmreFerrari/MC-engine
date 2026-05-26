@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { ShieldAlert, Info, DatabaseZap, Clock, ArrowRight } from 'lucide-react';
+import { ShieldAlert, Info, DatabaseZap, Clock, ArrowRight, Download, BarChartHorizontal, GitCompare, ExternalLink, ChevronDown, Flag, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Dummy data for curves
@@ -9,11 +9,16 @@ const generateCurve = (shift: number, variance: number, maxH: number) => {
   for (let i = 4; i <= 30; i++) {
     // Normal-ish distribution calculation
     const base = Math.exp(-Math.pow(i - shift, 2) / (2 * variance));
+    const reported = (Math.exp(-Math.pow(i - shift, 2) / (2 * variance)) * maxH);
+    const adversarial = (Math.exp(-Math.pow(i - (shift + 4), 2) / (2 * (variance + 1))) * maxH * 0.8);
+    
     data.push({
       day: i,
-      baseline: i < 20 ? (Math.exp(-Math.pow(i - 14, 2) / (2 * 4)) * maxH) : 0,
-      reported: (Math.exp(-Math.pow(i - shift, 2) / (2 * variance)) * maxH),
-      adversarial: (Math.exp(-Math.pow(i - (shift + 4), 2) / (2 * (variance + 1))) * maxH * 0.8),
+      reported: reported,
+      adversarial: adversarial,
+      // 80% confidence band (just dummy math for visual)
+      conf_lb: reported * 0.7,
+      conf_ub: reported * 1.3,
     });
   }
   return data;
@@ -21,9 +26,18 @@ const generateCurve = (shift: number, variance: number, maxH: number) => {
 
 const curveData = generateCurve(19, 8, 100);
 
+// Sample sensitivity data
+const sensitivityData = [
+  { factor: 'Port Buffer Capacity Drop (-10%)', impact: 14.2 },
+  { factor: 'Sub-tier Labor Strike (+10% Risk)', impact: 8.5 },
+  { factor: 'Red Sea Reroute Delay (+15%)', impact: 6.1 },
+  { factor: 'Cyber Interference (+5% Noise)', impact: 3.4 }
+];
+
 export function SimulationResults() {
   const [wartime, setWartime] = useState(false);
   const [showAssumptions, setShowAssumptions] = useState(false);
+  const [showExport, setShowExport] = useState(false);
 
   return (
     <div className="max-w-[1400px] mx-auto space-y-6 pb-12">
@@ -59,12 +73,54 @@ export function SimulationResults() {
           </div>
         </div>
 
-        {/* L4: FINANCIAL DIALECT */}
-        <div className="text-right flex flex-col items-end min-w-[200px] bg-slate-900 border border-slate-800 p-3 rounded">
-          <div className="text-[9px] uppercase tracking-widest font-mono text-amber-500/70 mb-1 font-bold">Actuary Pricing Input (L4)</div>
-          <div className="text-amber-500 flex items-center gap-2">
-            <span className="font-mono text-xl font-bold tracking-tighter">~$2.4M</span>
-            <span className="text-[9px] opacity-70 uppercase tracking-widest leading-tight text-left border-l border-amber-500/20 pl-2">per $100M<br/>coverage</span>
+        <div className="flex gap-4">
+          {/* L4: FINANCIAL DIALECT */}
+          <div className="text-right flex flex-col items-end min-w-[160px] bg-slate-900 border border-slate-800 p-3 rounded">
+            <div className="text-[9px] uppercase tracking-widest font-mono text-amber-500/70 mb-1 font-bold">Actuary Pricing Input (L4)</div>
+            <div className="text-amber-500 flex items-center gap-2">
+              <span className="font-mono text-xl font-bold tracking-tighter">~$2.4M</span>
+              <span className="text-[9px] opacity-70 uppercase tracking-widest leading-tight text-left border-l border-amber-500/20 pl-2">per $100M<br/>coverage</span>
+            </div>
+          </div>
+          
+          {/* L6 Export Dropdown */}
+          <div className="relative">
+            <button 
+              onClick={() => setShowExport(!showExport)}
+              className="h-full bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold tracking-widest uppercase px-4 rounded border border-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.2)] flex items-center gap-2 transition-colors"
+            >
+              <Download className="w-4 h-4" /> Export Product <ChevronDown className="w-4 h-4" />
+            </button>
+            {showExport && (
+              <div className="absolute top-full right-0 mt-2 w-64 bg-[#0B0F19] border border-blue-500/30 rounded shadow-2xl z-50 overflow-hidden">
+                <div className="p-2 border-b border-slate-800 font-medium text-[9px] text-slate-500 uppercase tracking-widest bg-slate-950 font-mono">
+                  L6 Hybrid Products
+                </div>
+                <div className="flex flex-col divide-y divide-slate-800/50">
+                  <button className="px-4 py-3 text-sm text-left hover:bg-slate-900 hover:text-white flex items-center gap-3 text-slate-300 transition-colors">
+                    <Flag className="w-4 h-4 text-emerald-500" />
+                    <div>
+                      <div className="font-bold">Decision Forcer</div>
+                      <div className="text-[10px] text-slate-500 font-mono">Exec summary for policy</div>
+                    </div>
+                  </button>
+                  <button className="px-4 py-3 text-sm text-left hover:bg-slate-900 hover:text-white flex items-center gap-3 text-slate-300 transition-colors">
+                    <DatabaseZap className="w-4 h-4 text-amber-500" />
+                    <div>
+                      <div className="font-bold">Budget Unlocker</div>
+                      <div className="text-[10px] text-slate-500 font-mono">POM justification memo</div>
+                    </div>
+                  </button>
+                  <button className="px-4 py-3 text-sm text-left hover:bg-slate-900 hover:text-white flex items-center gap-3 text-slate-300 transition-colors">
+                    <Target className="w-4 h-4 text-red-500" />
+                    <div>
+                      <div className="font-bold">Wargame Inject</div>
+                      <div className="text-[10px] text-slate-500 font-mono">TTX scenario payload</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -142,6 +198,8 @@ export function SimulationResults() {
               
               {!wartime ? (
                 <>
+                  <Area type="monotone" dataKey="conf_ub" stroke="none" fill="#1e293b" fillOpacity={0.6} />
+                  <Area type="monotone" dataKey="conf_lb" stroke="none" fill="#090d17" fillOpacity={1} />
                   <Area type="monotone" dataKey="reported" stroke="#3b82f6" strokeWidth={2} fillOpacity={1} fill="url(#colorReported)" />
                   <Area type="monotone" dataKey="adversarial" stroke="#a855f7" strokeWidth={2} fillOpacity={1} fill="url(#colorAdv)" />
                   <ReferenceLine x={19} stroke="#f59e0b" strokeDasharray="3 3" label={{ position: 'top', value: 'P90 (19D)', fill: '#f59e0b', fontSize: 10, fontFamily: 'JetBrains Mono' }} />
@@ -154,6 +212,83 @@ export function SimulationResults() {
               )}
             </AreaChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Assumption Diff (Run 1 vs Run 2) */}
+        <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 flex flex-col">
+          <div className="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+            <h3 className="font-bold text-[13px] uppercase tracking-widest flex items-center gap-2 text-slate-200"><GitCompare className="w-4 h-4 text-emerald-500" /> Assumption Diff</h3>
+            <span className="text-[9px] font-mono tracking-widest text-slate-500">RUN 841 → 842</span>
+          </div>
+          <div className="flex-1 space-y-3">
+            <div className="text-[10px] font-mono tracking-widest uppercase text-slate-500 font-bold mb-2">Input Deltas</div>
+            
+            <div className="bg-[#050810] border border-slate-800 rounded p-3 text-sm flex justify-between items-center">
+              <div>
+                <div className="font-semibold text-slate-300">Supplier Node Delta Capacity</div>
+                <div className="text-[10px] text-slate-500 font-mono mt-1 w-48 truncate">Override injected by Analyst J.Doe</div>
+              </div>
+              <div className="flex gap-2 items-center font-mono text-xs font-bold">
+                <span className="text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded line-through opacity-70">12% Risk</span>
+                <ArrowRight className="w-3 h-3 text-slate-600" />
+                <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">60% Risk</span>
+              </div>
+            </div>
+
+            <div className="bg-[#050810] border border-slate-800 rounded p-3 text-sm flex justify-between items-center">
+              <div>
+                <div className="font-semibold text-slate-300">Port of Entry Bravo Congestion</div>
+                <div className="text-[10px] text-slate-500 font-mono mt-1">L1 Data Engine Update</div>
+              </div>
+              <div className="flex gap-2 items-center font-mono text-xs font-bold">
+                <span className="text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded line-through opacity-70">2.1d Delay</span>
+                <ArrowRight className="w-3 h-3 text-slate-600" />
+                <span className="text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">4.1d Delay</span>
+              </div>
+            </div>
+            
+            <div className="bg-[#050810] border border-slate-800 rounded p-3 text-sm flex justify-between items-center">
+              <div>
+                <div className="font-semibold text-slate-300">Asset Redundancy (JASSM)</div>
+                <div className="text-[10px] text-slate-500 font-mono mt-1">Static</div>
+              </div>
+              <div className="flex gap-2 items-center font-mono text-xs font-bold">
+                <span className="text-slate-500">Unchanged (0/5)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Sensitivity / Tornado Diagram */}
+        <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 flex flex-col">
+          <div className="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+            <h3 className="font-bold text-[13px] uppercase tracking-widest flex items-center gap-2 text-slate-200"><BarChartHorizontal className="w-4 h-4 text-blue-500" /> Sensitivity Analysis</h3>
+            <span className="text-[9px] font-mono tracking-widest text-slate-500">IMPACT ON P90 (DAYS)</span>
+          </div>
+          <div className="flex-1 flex flex-col justify-center space-y-4">
+            {sensitivityData.map((item, idx) => (
+              <div key={idx} className="flex items-center gap-4">
+                <div className="w-48 text-right text-xs font-medium text-slate-300 truncate" title={item.factor}>
+                  {item.factor}
+                </div>
+                <div className="flex-1 bg-slate-900/50 h-5 rounded overflow-hidden flex items-center relative border border-slate-800">
+                  <div 
+                    className={cn("h-full", idx === 0 ? "bg-red-500" : idx === 1 ? "bg-amber-500" : "bg-blue-500")} 
+                    style={{ width: `${(item.impact / 15) * 100}%` }}
+                  />
+                  <div className="absolute inset-x-0 h-full w-px bg-slate-700 pointer-events-none left-1/2" />
+                </div>
+                <div className={cn("w-12 text-right font-mono text-xs font-bold", idx === 0 ? "text-red-400" : idx === 1 ? "text-amber-500" : "text-blue-400")}>
+                  +{item.impact}d
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-4 text-center border-t border-slate-800/50 pt-3">
+            Variables capable of flipping operational state
+          </div>
         </div>
       </div>
 
@@ -258,6 +393,38 @@ export function SimulationResults() {
           </div>
         </div>
       </div>
+
+      {/* Decision Journal Fields */}
+      <div className="bg-[#090D17] border border-slate-800 rounded-lg p-5 flex flex-col">
+        <h3 className="font-bold text-[13px] uppercase tracking-widest flex items-center gap-2 text-slate-200 border-b border-slate-800 pb-3 mb-4">
+          <DatabaseZap className="w-4 h-4 text-emerald-500" />
+          Decision Journal Context
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-[10px] uppercase font-mono tracking-widest text-slate-500 mb-2 font-bold">Why I Ran This</label>
+            <textarea 
+              className="w-full bg-[#050810] border border-slate-700 rounded p-3 text-sm text-slate-300 font-sans focus:outline-none focus:border-blue-500 min-h-[100px]"
+              placeholder="e.g. Exploring impact of second-shift labor at Node Delta..."
+              defaultValue="Testing the robustness of P90 delivery metrics against the HUMINT field report indicating 100% temporary labor on second shift at Supplier Node Delta."
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] uppercase font-mono tracking-widest text-slate-500 mb-2 font-bold">What I Learned</label>
+            <textarea 
+              className="w-full bg-[#050810] border border-slate-700 rounded p-3 text-sm text-slate-300 font-sans focus:outline-none focus:border-emerald-500 min-h-[100px]"
+              placeholder="e.g. Discovered that 15% drop in capacity leads to..."
+              defaultValue="The baseline 12% risk fundamentally misprices the fragility. Injecting the 60% override causes the entire network's P90 delivery to push past 19 days, meaning the 3rd MLR goes combat ineffective because JASSM buffers drain faster than they fill."
+            />
+          </div>
+        </div>
+        <div className="mt-4 flex justify-end">
+          <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded text-xs font-bold tracking-widest uppercase font-mono transition-colors">
+            Save Journal Context
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }

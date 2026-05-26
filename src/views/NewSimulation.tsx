@@ -113,7 +113,11 @@ export function NewSimulation() {
                 <h3 className="text-lg font-semibold mb-2">Single-Source Regional Hub</h3>
                 <p className="text-sm text-slate-400 mb-6 flex-1">Standard 3-tier layout focusing on a single critical chokepoint port/hub feeding 2 primary depots.</p>
                 <div className="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-                  <span className="flex items-center gap-1"><Network className="w-4 h-4"/> 14 Nodes</span>
+                  <span className="flex items-center gap-1 font-mono"><Network className="w-4 h-4"/> 14 Nodes</span>
+                </div>
+                <div className="pt-2 flex flex-col gap-1 text-[10px] text-slate-500 font-mono">
+                  <span className="flex items-center gap-1.5"><History className="w-3 h-3"/> Baseline Historic Accuracy: 88.4%</span>
+                  <span className="flex items-center gap-1.5"><KeyRound className="w-3 h-3"/> Calibrated: 2026-05-01 (Auto-L1)</span>
                 </div>
               </div>
 
